@@ -21,12 +21,10 @@ ENV PYTHONUNBUFFERED=1
 COPY uv.lock pyproject.toml /app/
 
 # Install the project's dependencies using the lockfile and settings
-RUN --mount=type=cache,id=s/honcho-/root/.cache/uv,target=/root/.cache/uv \
-    uv sync --frozen --no-install-project --no-group dev
+RUN uv sync --frozen --no-install-project --no-group dev
 
 # Sync the project
-RUN --mount=type=cache,id=s/honcho-/root/.cache/uv,target=/root/.cache/uv \
-    uv sync --frozen --no-group dev
+RUN uv sync --frozen --no-group dev
 
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"

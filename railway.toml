@@ -2,7 +2,7 @@
 #
 # Setup (dashboard):
 # 1. New project → Deploy from this repo → pick this Dockerfile (builder: Dockerfile).
-#    Dockerfile uses only cache mounts (no bind mounts); Railway rejects type=bind.
+#    Dockerfile avoids RUN --mount (Railway cache id must match your service; no bind mounts).
 # 2. Add PostgreSQL (enable pgvector in the DB: CREATE EXTENSION IF NOT EXISTS vector;).
 # 3. Set LLM_* API keys and any other vars from .env.template.
 #    Railway sets DATABASE_URL; this app maps it to DB_CONNECTION_URI automatically.
