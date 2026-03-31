@@ -10,14 +10,13 @@ WORKDIR /app
 # Enable bytecode compilation
 ENV UV_COMPILE_BYTECODE=1
 
-# Copy from the cache instead of linking since it's a mounted volume
+# Use file copies for uv wheels instead of symlinks into the venv
 ENV UV_LINK_MODE=copy
 
 # Python optimizations
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Railway does not support RUN --mount=type=bind; copy lockfiles instead.
 COPY uv.lock pyproject.toml /app/
 
 # Install the project's dependencies using the lockfile and settings
