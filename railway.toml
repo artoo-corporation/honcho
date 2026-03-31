@@ -2,6 +2,8 @@
 #
 # Setup (dashboard):
 # 1. New project → Deploy from this repo → pick this Dockerfile (builder: Dockerfile).
+#    If the build errors on cache mount id, set Dockerfile cache id to
+#    id=s/<your service ID>-/root/.cache/uv (Railway Dockerfile cache mounts).
 # 2. Add PostgreSQL (enable pgvector in the DB: CREATE EXTENSION IF NOT EXISTS vector;).
 # 3. Set LLM_* API keys and any other vars from .env.template.
 #    Railway sets DATABASE_URL; this app maps it to DB_CONNECTION_URI automatically.
