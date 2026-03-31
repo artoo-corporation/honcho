@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 from typing import Annotated, Any, ClassVar, Literal, Protocol
 
@@ -19,6 +20,27 @@ from src.utils.types import SupportedProviders
 # Load .env file for local development.
 # Make sure this is called before AppSettings is instantiated if you rely on .env for AppSettings construction.
 load_dotenv(override=True)
+
+
+def _promote_database_url() -> None:
+    """Use DATABASE_URL when DB_CONNECTION_URI is unset (e.g. Railway Postgres plugin)."""
+    if os.environ.get("DB_CONNECTION_URI"):
+        return
+    raw = os.environ.get("DATABASE_URL")
+    if not raw:
+        return
+    if raw.startswith("postgresql+psycopg://"):
+        os.environ["DB_CONNECTION_URI"] = raw
+        return
+    if raw.startswith("postgres://"):
+        rest = raw.removeprefix("postgres://")
+        os.environ["DB_CONNECTION_URI"] = f"postgresql+psycopg://{rest}"
+    elif raw.startswith("postgresql://"):
+        rest = raw.removeprefix("postgresql://")
+        os.environ["DB_CONNECTION_URI"] = f"postgresql+psycopg://{rest}"
+
+
+_promote_database_url()
 
 logger = logging.getLogger(__name__)
 

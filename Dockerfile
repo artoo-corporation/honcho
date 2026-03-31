@@ -44,6 +44,7 @@ COPY --chown=app:app scripts/ /app/scripts/
 COPY --chown=app:app alembic.ini /app/alembic.ini
 # Copy config files - this will copy config.toml if it exists, and config.toml.example
 COPY --chown=app:app config.toml* /app/
+COPY --chown=app:app docker/entrypoint.sh /app/docker/entrypoint.sh
 
 # Switch to non-root user
 USER app
@@ -51,6 +52,7 @@ USER app
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/openapi.json')" || exit 1
+    CMD python -c "import os,urllib.request; p=os.environ.get('PORT','8000'); urllib.request.urlopen(f'http://127.0.0.1:{p}/health')" || exit 1
 
-CMD ["fastapi", "run", "--host", "0.0.0.0", "src/main.py"]
+# Honor PORT for PaaS (e.g. Railway). For migrations + API, use docker/entrypoint.sh (see docker-compose).
+CMD ["sh", "-c", "exec /app/.venv/bin/fastapi run --host 0.0.0.0 --port ${PORT:-8000} src/main.py"]

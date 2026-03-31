@@ -196,6 +196,12 @@ app.include_router(webhooks.router, prefix="/v3")
 app.add_route("/metrics", metrics_endpoint, methods=["GET"])
 
 
+@app.get("/health")
+async def health() -> dict[str, str]:
+    """Liveness/readiness probe for load balancers and PaaS (e.g. Railway, Docker)."""
+    return {"status": "ok"}
+
+
 # Global exception handlers
 @app.exception_handler(HonchoException)
 async def honcho_exception_handler(_request: Request, exc: HonchoException):
