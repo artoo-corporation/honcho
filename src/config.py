@@ -30,7 +30,7 @@ def _promote_database_url() -> None:
     if not raw:
         return
     if raw.startswith("postgresql+psycopg://"):
-        os.environ["DB_CONNECTION_URI"] = raw
+        os.environ["DB_CONNECTION_URI"] =  raw 
         return
     if raw.startswith("postgres://"):
         rest = raw.removeprefix("postgres://")
